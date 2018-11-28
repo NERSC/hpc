@@ -95,15 +95,14 @@ func BuildScript(cmd, filenameSuffix string, myUid, myGid int, pth string) (err 
 
 //Finds which batch system is installed on the system returns a specific number
 func DetectBatchSystem() (num int) {
-	osEnv := os.Environ()
 	counter := 0
-	for _, entry := range osEnv {
-		if strings.Contains(entry, "LSF_BINDIR") {
-			counter = counter + 1
-		}
-	}
 
-	_, err := exec.LookPath("sbatch")
+	_, err := exec.LookPath("bsub")
+        if err == nil {
+                counter = counter + 1
+        }
+
+	_, err = exec.LookPath("sbatch")
 	if err == nil {
 		counter = counter + 3
 	}
